@@ -861,3 +861,9 @@ library(leaflet)
 
 1. Faça [um segundo mapa interativo]{.hl} com marcadores para as cidades que satisfazem algum critério que você ache interessante. Use a imaginação.
 
+
+```{r solucao-218}
+  function densidade(pop, area){
+    pop/area
+  }
+```
