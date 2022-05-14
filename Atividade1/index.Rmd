@@ -915,3 +915,14 @@ library(leaflet)
   #cidadesValidas %>% ggplot(aes(x = despesas_municipais, y = idhm)) + geom_jitter(width = 10e9, shape = ".")
 ```
 
+
+```{r solucao-41}
+    leaflet(maiores) %>% 
+      setView(
+        lng = mean(maiores$longitude), 
+        lat = mean(maiores$latitude),
+        zoom = 4
+      ) %>% 
+      addTiles() %>% 
+      addMarkers()
+    ```
