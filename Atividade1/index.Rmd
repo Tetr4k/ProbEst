@@ -886,10 +886,12 @@ library(leaflet)
 
 ```{r solucao-34}
   despesaValida <- function(valor)
-    valor > 0
+    valor %>% is.finite
+    #valor > 0
 
-  idhmValido <- function(valor)
-    valor > 0
+  idhmValido <- function(idhm)
+    idhm %>% is.finite
+    #idhm > 0
 
   cidadesValidas <- cidades %>% filter(despesas_municipais %>% despesaValida) %>% filter(idhm %>% idhmValido)
 
