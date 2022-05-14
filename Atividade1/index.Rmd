@@ -891,6 +891,7 @@ library(leaflet)
   idhmValido <- function(valor)
     valor > 0
 
+  cidadesValidas <- cidades %>% filter(despesas_municipais %>% despesaValida) %>% filter(idhm %>% idhmValido)
 
 ```
 
