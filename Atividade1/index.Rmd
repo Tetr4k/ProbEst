@@ -888,7 +888,9 @@ library(leaflet)
   despesaValida <- function(valor)
     valor > 0
 
-  
+  idhmValido <- function(valor)
+    valor > 0
+
 
 ```
 
