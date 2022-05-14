@@ -861,7 +861,7 @@ library(leaflet)
 
 1. Faça [um segundo mapa interativo]{.hl} com marcadores para as cidades que satisfazem algum critério que você ache interessante. Use a imaginação.
 
-
+# 2.18
 ```{r solucao-218}
   calculaDensidade <- function(pop, area)
     pop/area
@@ -889,7 +889,7 @@ library(leaflet)
   menores %>% select(densidade, cidade, pop_estimada, area, tipo)
   maiores %>% select(densidade, cidade, pop_estimada, area, tipo)
 ```
-
+# 3.4
 ```{r solucao-34}
   despesaValida <- function(valor)
     valor %>% is.finite
@@ -914,7 +914,9 @@ library(leaflet)
   
   #cidadesValidas %>% ggplot(aes(x = despesas_municipais, y = idhm)) + geom_jitter(width = 10e9, shape = ".")
 ```
+# 3.40
 
+# 4.1 - As 10 cidades com menor densidade
 
 ```{r solucao-41}
     leaflet(maiores) %>% 
