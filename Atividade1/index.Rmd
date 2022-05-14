@@ -876,12 +876,18 @@ library(leaflet)
     densidade = calculaDensidade(pop_estimada, area)
   )
   
-  cidadesValidas = cidades %>% filter(pop_estimada %>% populacaoValida) %>% filter(area %>% areaValida)
+  cidadesValidas =  cidades %>%
+                    filter(pop_estimada %>% populacaoValida) %>%
+                    filter(area %>% areaValida)
   
-  cidadesValidas %>% select(densidade, cidade, pop_estimada, area, tipo) %>% distinct() %>% arrange(densidade)
-   
-   cidadesValidas %>% select(densidade, cidade, pop_estimada, area, tipo) %>% distinct() %>% arrange(densidade %>% desc)
-
+  cidadesOrdenadas =  cidadesValidas %>%
+                      select(densidade, cidade, pop_estimada, area, tipo, latitude, longitude) %>%
+                      arrange(densidade)
+  
+  menores = cidadesOrdenadas %>% slice_head(n = 10)
+  maiores = cidadesOrdenadas %>% slice_tail(n = 10)
+  menores %>% select(densidade, cidade, pop_estimada, area, tipo)
+  maiores %>% select(densidade, cidade, pop_estimada, area, tipo)
 ```
 
 ```{r solucao-34}
