@@ -866,4 +866,8 @@ library(leaflet)
   calculaDensidade <- function(pop, area){
     pop/area
   }
+
+  cidades <- cidades %>% mutate(
+    densidade = calculaDensidade(pop_estimada, area)
+  )
 ```
