@@ -883,3 +883,12 @@ library(leaflet)
    cidadesValidas %>% select(densidade, cidade, pop_estimada, area, tipo) %>% distinct() %>% arrange(densidade %>% desc)
 
 ```
+
+```{r solucao-34}
+  despesaValida <- function(valor)
+    valor > 0
+
+  
+
+```
+
