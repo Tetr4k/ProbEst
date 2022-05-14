@@ -878,4 +878,8 @@ library(leaflet)
   
   cidadesValidas = cidades %>% filter(pop_estimada %>% populacaoValida) %>% filter(area %>% areaValida)
   
+  cidadesValidas %>% select(densidade, cidade, pop_estimada, area, tipo) %>% distinct() %>% arrange(densidade)
+   
+   cidadesValidas %>% select(densidade, cidade, pop_estimada, area, tipo) %>% distinct() %>% arrange(densidade %>% desc)
+
 ```
