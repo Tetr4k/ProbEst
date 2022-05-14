@@ -863,7 +863,7 @@ library(leaflet)
 
 
 ```{r solucao-218}
-  function densidade(pop, area){
+  calculaDensidade <- function(pop, area){
     pop/area
   }
 ```
