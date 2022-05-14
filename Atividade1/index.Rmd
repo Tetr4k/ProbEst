@@ -875,4 +875,7 @@ library(leaflet)
   cidades <- cidades %>% mutate(
     densidade = calculaDensidade(pop_estimada, area)
   )
+  
+  cidadesValidas = cidades %>% filter(pop_estimada %>% populacaoValida) %>% filter(area %>% areaValida)
+  
 ```
