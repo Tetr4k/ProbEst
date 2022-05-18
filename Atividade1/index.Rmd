@@ -893,8 +893,7 @@ library(leaflet)
 # 3.4
 ```{r solucao-34}
   despesaValida <- function(valor)
-    valor %>% is.finite
-    #valor > 0
+    valor > 0
 
   idhmValido <- function(idhm)
     idhm %>% is.finite
