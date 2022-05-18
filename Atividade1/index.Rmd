@@ -925,12 +925,68 @@ library(leaflet)
 # 4.1 - As 10 cidades com menor densidade
 
 ```{r solucao-41}
-    leaflet(maiores) %>% 
-      setView(
-        lng = mean(maiores$longitude), 
-        lat = mean(maiores$latitude),
-        zoom = 4
-      ) %>% 
-      addTiles() %>% 
-      addMarkers()
-    ```
+  classificacao = c(1:10)
+  densidade     = menores %>% pull(densidade)
+  conteudo      = paste(classificacao, "º densidade populacional: ", densidade, sep = "")
+  
+  leaflet(menores) %>%
+  addTiles() %>% 
+  addMarkers(~longitude, ~latitude, popup = ~conteudo, label = ~cidade)
+```
+
+## Cidades urbanas com mais tratores
+
+Pega as informações necessárias, filtra, ordena, prepara conteudo do popup e adiciona os marcadores.
+
+```{r} 
+  #meses = c("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")
+  #regex = paste("[\\s]", meses, "[\\s]", sep = "")
+  
+  #contemMes <- function(cidade){
+    #cidade %>% str_detect(meses)
+    
+    #for(mes in meses){
+    #  retorno <- cidade %>% str_detect(mes)
+    #}
+    #retorno
+    
+    #meses %in% cidade
+    
+    #No soco
+    #ifelse(str_detect(cidade, "Janeiro"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Fevereiro"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Marco"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Abril"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Maio"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Junho"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Julho"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Agosto"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Setembro"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Dezembro"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Outubro"), return(TRUE), return(FALSE))
+    #ifelse(str_detect(cidade, "Novembro"), return(TRUE), return(FALSE))
+  #}
+  
+  #cidadesComMes = cidades %>% filter(cidade %>% contemMes)
+  #(cidadesComMes)
+  
+  #leaflet(cidadesComMes) %>%
+  #addTiles() %>% 
+  #addMarkers(~longitude, ~latitude, label = ~cidade)
+  
+  cidadesUrbanasComMaisTratores = cidades %>%
+                                  select(cidade, tratores, tipo, longitude, latitude) %>%
+                                  filter(tipo == "Urbano") %>%
+                                  arrange(tratores %>% desc) %>%
+                                  slice_head(n = 10)
+  
+  qtdTratores = cidadesUrbanasComMaisTratores %>% pull(tratores)
+  
+  conteudo = paste(classificacao, "º - ", qtdTratores, " tratores", sep = "")
+  
+  leaflet(cidadesUrbanasComMaisTratores) %>%
+  addTiles() %>% 
+  addMarkers(~longitude, ~latitude, label = ~cidade, popup = ~conteudo)
+```
+
+
