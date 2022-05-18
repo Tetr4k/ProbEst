@@ -873,6 +873,7 @@ library(leaflet)
     area > 0
   
   cidadesValidas =  cidades %>%
+                    select(cidade, pop_estimada, area, tipo, latitude, longitude) %>%
                     filter(pop_estimada %>% populacaoValida) %>%
                     filter(area %>% areaValida)
   
@@ -881,7 +882,6 @@ library(leaflet)
   )
   
   cidadesOrdenadas =  cidadesValidas %>%
-                      select(densidade, cidade, pop_estimada, area, tipo, latitude, longitude) %>%
                       arrange(densidade)
   
   menores = cidadesOrdenadas %>% slice_head(n = 10)
