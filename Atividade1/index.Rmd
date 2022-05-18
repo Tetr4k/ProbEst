@@ -911,7 +911,12 @@ library(leaflet)
   cidadesValidas %>%  ggplot(aes(x = despesas_municipais, y = idhm)) +
                       geom_point(alpha = 0.05) +
                       scale_x_continuous(limits = c(0, 10e8)) +
-                      geom_smooth(aes(group = 1), method = 'lm', se = FALSE)
+                      geom_smooth(aes(group = 1), method = 'lm', se = FALSE)+
+                      labs(
+                        title = "IDHM por Despesas Municipais",
+                        x = "Despesas municipais",
+                        y = "IDHM",
+                      )
   
   #cidadesValidas %>% ggplot(aes(x = despesas_municipais, y = idhm)) + geom_jitter(width = 10e9, shape = ".")
 ```
