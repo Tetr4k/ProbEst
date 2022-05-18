@@ -872,13 +872,13 @@ library(leaflet)
   areaValida <- function(area)
     area > 0
   
-  cidades <- cidades %>% mutate(
-    densidade = calculaDensidade(pop_estimada, area)
-  )
-  
   cidadesValidas =  cidades %>%
                     filter(pop_estimada %>% populacaoValida) %>%
                     filter(area %>% areaValida)
+  
+  cidadesValidas <- cidadesValidas %>% mutate(
+    densidade = calculaDensidade(pop_estimada, area)
+  )
   
   cidadesOrdenadas =  cidadesValidas %>%
                       select(densidade, cidade, pop_estimada, area, tipo, latitude, longitude) %>%
