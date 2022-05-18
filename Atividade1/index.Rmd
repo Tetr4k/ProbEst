@@ -862,6 +862,9 @@ library(leaflet)
 1. Faça [um segundo mapa interativo]{.hl} com marcadores para as cidades que satisfazem algum critério que você ache interessante. Use a imaginação.
 
 # 2.18
+
+Pega as informações necessárias, valida população e área, calcula e cria coluna densidade, ordena e pega as 10 primeiras e ultimas linhas.
+
 ```{r solucao-218}
   calculaDensidade <- function(pop, area)
     pop/area
@@ -890,7 +893,40 @@ library(leaflet)
   menores = cidadesOrdenadas %>% slice_head(n = 10)
   menores %>% select(densidade, cidade, pop_estimada, area, tipo)
 ```
+As 10 cidades com maior densidade demografica são:
+
+* São Paulo
+* Nilópolis
+* Fortaleza
+* Olinda
+* São Caetano do Sul
+* Osasco
+* Carapicuíba
+* São João de Meriti
+* Diadema
+* Taboão da Serra
+
+As 10 cidades com menor densidade demografica são:
+
+* Japurá
+* Jacareacanga
+* Tapauá
+* Jutaí
+* Barcelos
+* Atalaia do Norte
+* Mateiros
+* Itamarati
+* Rondolândia
+* Cocalinho
+
+As cidades de maior densidade demografica são urbanas, e a maioria das cidades de menor densidade demografica são Rurais
+
+É possivel concluir que as cidades urbanas tem maior densidade demográfica.
+
 # 3.4
+
+Pega as informações necessárias, valida IDHM e despesas, plota
+
 ```{r solucao-34}
   despesaValida <- function(valor)
     valor > 0
@@ -920,9 +956,14 @@ library(leaflet)
   
   #cidadesValidas %>% ggplot(aes(x = despesas_municipais, y = idhm)) + geom_jitter(width = 10e9, shape = ".")
 ```
+
+É possivel concluir que quanto maior a despesa municipal, maior o IDHM. Porém, a cidade pode ter um IDHM alto com despesa municipal relativamente baixa.
+
 # 3.40
 
 # 4.1 - As 10 cidades com menor densidade
+
+Prepara conteudo para o popup, adiciona marcadores
 
 ```{r solucao-41}
   classificacao = c(1:10)
