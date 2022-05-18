@@ -904,9 +904,9 @@ library(leaflet)
                     filter(despesas_municipais %>% despesaValida) %>%
                     filter(idhm %>% idhmValido)
 
-  cidadesValidas %>%  ggplot(aes(x = despesas_municipais, y = idhm)) +
-                      geom_point(alpha = 0.05) +
-                      geom_smooth(aes(group = 1), method = 'lm', se = FALSE)
+  #cidadesValidas %>%  ggplot(aes(x = despesas_municipais, y = idhm)) +
+  #                    geom_point(alpha = 0.05) +
+  #                    geom_smooth(aes(group = 1), method = 'lm', se = FALSE)
   
   cidadesValidas %>%  ggplot(aes(x = despesas_municipais, y = idhm)) +
                       geom_point(alpha = 0.05) +
