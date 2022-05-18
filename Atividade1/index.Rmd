@@ -884,10 +884,11 @@ library(leaflet)
   cidadesOrdenadas =  cidadesValidas %>%
                       arrange(densidade)
   
-  menores = cidadesOrdenadas %>% slice_head(n = 10)
   maiores = cidadesOrdenadas %>% slice_tail(n = 10)
-  menores %>% select(densidade, cidade, pop_estimada, area, tipo)
   maiores %>% select(densidade, cidade, pop_estimada, area, tipo)
+  
+  menores = cidadesOrdenadas %>% slice_head(n = 10)
+  menores %>% select(densidade, cidade, pop_estimada, area, tipo)
 ```
 # 3.4
 ```{r solucao-34}
