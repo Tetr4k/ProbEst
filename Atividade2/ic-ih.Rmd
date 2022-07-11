@@ -1,0 +1,565 @@
+---
+title: 'Pessoas e medidas'
+subtitle: 'Lista avaliativa -- Probabilidade e Estatística -- 2022.1'
+author: 'fnaufel'
+email: 'https://fnaufel.github.io/'
+date: '   (v. `r format(Sys.Date(), "%d/%m/%Y")`)'
+lang: 'pt-br'
+
+output: 
+  # To install these output formats, run
+  #   install.packages("devtools")
+  #   devtools::install_github("fnaufel/fnaufelRmd")
+  fnaufelRmd::html_report:
+    []
+---
+
+```{r setup, include=FALSE}
+# The next command configures MANY things and loads quite a few packages.
+# 
+# If you want to see what's being done, execute 
+# 
+#   cat(
+#     system.file(
+#       "rmarkdown/resources/R/_common_report.R", 
+#       package = "fnaufelRmd"
+#     )
+#   )
+# 
+# to find out the location of the file. Then open the file.
+# 
+# If you want to change the configuration, copy the file, edit it, and
+# source it instead of the package file. 
+# 
+# Or simply write your commands here in this code chunk.
+
+source(
+  system.file(
+    "rmarkdown/resources/R/_common_report.R",
+    package = "fnaufelRmd"
+  )
+)
+```
+
+
+# Instruções {-}
+
+## Fase de coleta de dados e amostragem {-}
+
+* Siga cuidadosamente as instruções em [*coleta de dados*](#coleta) e envie os arquivos `.csv` [no Moodle]{.hl}.
+
+
+## Fase de resolução {-}
+
+* Aguarde que o professor envie a você os arquivos `.csv` com os dados que você vai usar na resolução das [questões](#questoes).
+
+* Clique o botão `Code`, no início desta página, para baixar o arquivo Rmd deste documento.
+
+* Edite o arquivo Rmd para resolver as questões [com os dados atribuídos a você]{.hl}. 
+
+* Escreva o máximo possível sobre o seu raciocínio. Justifique suas respostas.
+
+* Teste suas respostas. Tudo deve estar executando sem erros.
+
+* [Envie no Moodle: ]{.hl}
+
+  1. O arquivo Rmd com as suas resoluções e
+  
+  1. Um vídeo de até $5$ minutos explicando as suas resoluções.
+
+* Bom trabalho.
+
+
+# Ambiente {-}
+
+* Para gerar um arquivo HTML a partir deste documento, você precisa dos seguintes pacotes do R:
+
+  ```{r echo=FALSE, results='asis'}
+  pacotes <- session_info('attached')$packages$package
+  pacotes_tidy <- getNamespace("tidyverse")$core
+  pacotes <- c(
+    setdiff(pacotes, pacotes_tidy),
+    'fnaufelRmd',
+    'devtools'
+  ) %>% 
+    sort()
+   
+  paste('  * `', pacotes, '`', collapse = '\n\n') %>% 
+    cat()
+  ```
+
+* Execute o seguinte código para instalar os pacotes que estão faltando no seu ambiente:
+
+    ```{r message=FALSE}
+    if (!require('devtools'))
+      install.packages('devtools')
+    
+    if (!require('fnaufelRmd'))
+      devtools::install_github("fnaufel/fnaufelRmd")
+    
+    pacotes <- c(
+      'conflicted',
+      'kableExtra',
+      'knitr',
+      'latex2exp',
+      'sessioninfo',
+      'summarytools',
+      'tidyverse'
+    )
+    
+    instalar_se_preciso <- function(x) {
+      
+      if (!require(x, character.only = TRUE))
+        install.packages(x)
+      
+    }
+    
+    invisible(sapply(pacotes, instalar_se_preciso))
+    ```
+
+* Se houver erro na instalação, entre em contato com o professor pelo Telegram, [enviando todas as mensagens emitidas quando você executou os comandos]{.hl}.
+
+
+# Coleta de dados {#coleta}
+
+## Sinistrismo {#sinistrismo}
+
+1. [Escolha $5$ pessoas]{.hl} dentre seus familiares e seus amigos. 
+
+1. [Peça a cada uma das pessoas]{.hl} para preencher o questionário abaixo.
+
+1. [Preencha você também]{.hl} o questionário abaixo com as suas respostas.
+
+   ::: {.rmdbox latex=1}
+   
+   #### **QUESTIONÁRIO SOBRE PREFERÊNCIA DE MÃO** {-}
+   
+   Por favor, indique qual mão você usaria para cada atividade abaixo, do seguinte modo:
+   
+   * Se você usaria *preferencialmente* uma das mãos, mas poderia usar --- ou ocasionalmente usa --- a outra mão, com resultados inferiores, então coloque "`+`" (um sinal de mais) na coluna da mão preferida.
+     
+   * Se você *sempre* usaria uma das mãos, e nunca a outra, então coloque "`+ +`" (*dois* sinais de mais) na coluna da mão usada.
+     
+   * Se você for *indiferente* quanto à mão usada, então coloque um "`+`" (sinal de mais) *em cada coluna*.
+
+    | ATIVIDADE                                           | ESQUERDA | DIREITA |
+    |-----------------------------------------------------+----------+---------|
+    | Escrever                                            |          |         |
+    | Desenhar                                            |          |         |
+    | Arremessar uma pedra                                |          |         |
+    | Cortar papel com uma tesoura                        |          |         |
+    | Escovar os dentes (com escova manual)               |          |         |
+    | Passar manteiga no pão com uma faca                 |          |         |
+    | Tomar sopa com uma colher                           |          |         |
+    | Varrer o chão (mão na parte de cima da vassoura)    |          |         |
+    | Riscar um fósforo (mão que segura o fósforo)        |          |         |
+    | Abrir uma caixa de sapatos (mão que segura a tampa) |          |         |
+
+   :::
+   
+1. [Gere o arquivo `sinistrismo.csv`]{.hl} com os resultados. 
+
+   O arquivo terá $7$ linhas (a primeira delas contendo os nomes das colunas) e [duas colunas]{.hl}:
+
+   * `sexo`: `M` ou `F`.
+   
+   * `nota`: um valor de ponto flutuante entre $-1$ e $1$ (inclusive) [com $3$ casas decimais]{.hl}, calculado para cada pessoa do seguinte modo:
+   
+     * $E = {}$ quantidade de "`+`" na coluna `Esquerda` do questionário preenchido.
+     
+     * $D = {}$ quantidade de "`+`" na coluna `Direita` do questionário preenchido.
+     
+     * `nota` $\displaystyle {}= \frac{E - D}{E + D}$
+
+1. Envie o arquivo [no Moodle]{.hl}.
+   
+   
+## Razão altura-mão {#alturamao}
+
+1. [Escolha $5$ pessoas]{.hl} dentre seus familiares e seus amigos. 
+
+1. [Registre]{.hl}, para cada pessoa,
+
+   * O [sexo]{.hl},
+   
+   * A [altura em centímetros]{.hl}, com $1$ casa decimal,
+   
+   * A [distância, em centímetros]{.hl}, com $1$ casa decimal, [entre a ponta do dedo mínimo e a ponta do polegar]{.hl} (ambos da mão esquerda), com a mão mais aberta possível --- como se a pessoa fosse tocar, ao mesmo tempo, só com a mão esquerda, duas teclas de um piano, uma muito afastada da outra.
+
+1. [Registre]{.hl} os mesmos dados [para você mesmo]{.hl}.
+
+1. [Gere o arquivo `razao.csv`]{.hl} com os resultados. 
+
+   O arquivo terá $7$ linhas (a primeira delas contendo os nomes das colunas) e [$4$ colunas]{.hl}:
+
+   * `sexo`: `M` ou `F`.
+   
+   * `altura`: um valor de ponto flutuante [com $1$ casa decimal]{.hl}.
+   
+   * `mao`: um valor de ponto flutuante [com $1$ casa decimal]{.hl}.
+   
+   * `razao`: um valor de ponto flutuante [com $1$ casa decimal]{.hl}, com a razão $\displaystyle \frac{\texttt{altura}}{\texttt{mao}}$.
+
+1. Envie o arquivo [no Moodle]{.hl}.
+   
+
+# Questões {#questoes}
+
+## Sinistrismo {#sinistrismoq}
+
+1. Leia o arquivo `sinistrismo-amostra.csv` que você recebeu, gerando uma *tibble*.
+
+1. Faça uma [breve análise exploratória]{.hl}:
+
+   a. Quantos elementos tem sua amostra?
+   
+   a. Quais as proporções de homens e mulheres?
+   
+   a. Quais as estatísticas [globais]{.hl} relativas a `nota`?
+   
+   a. Quais as estatísticas [por sexo]{.hl} relativas a `nota`?
+   
+   a. Faça [gráficos]{.hl} de `nota` (globais e por sexo). Escolha os tipos de gráfico mais adequados para a situação. Comente os resultados.
+   
+1. [Pesquise na internet]{.hl}: qual é a proporção de canhotos na população em geral?
+
+1. [Considere como canhota]{.hl} qualquer pessoa da sua amostra com `nota` ${}> 0{,}5$. 
+
+1. Construa um [intervalo de confiança]{.hl} para a proporção de canhotos na população, com base na sua amostra. Use nível de confiança de $95\%$.
+
+1. A proporção de canhotos na população em geral (que você pesquisou no item 3) está dentro do intervalo de confiança que você construiu? O que isto significa?
+
+1. Teste a seguinte [hipótese]{.hl}: a média das notas dos homens é igual à média das notas das mulheres. Use $\alpha = 0{,}05$. Comente o resultado.
+   
+
+## Razão altura-mão {#alturamaoq}
+
+1. Leia o arquivo `razao-amostra.csv` que você recebeu, gerando uma *tibble*.
+
+1. Faça uma [breve análise exploratória]{.hl}:
+
+   a. Quantos elementos tem sua amostra?
+   
+   a. Quais as proporções de homens e mulheres?
+   
+   a. Quais as estatísticas [globais]{.hl} relativas a `altura`, `mao`, e `razao`?
+   
+   a. Quais as estatísticas [por sexo]{.hl} relativas a `altura`, `mao`, e `razao`?
+   
+   a. Faça [gráficos]{.hl} de `altura`, `mao`, e `razao` (globais e por sexo). Escolha os tipos de gráfico mais adequados para a situação. Comente os resultados.
+
+1. Teste a seguinte [hipótese]{.hl}: `razao` é, em média, maior para os homens do que para as mulheres. Use $\alpha = 0{,}05$. Comente o resultado.
+
+1. Construa um [intervalo de confiança]{.hl} para a diferença das alturas médias entre homens e mulheres. Use nível de confiança de $95\%$.
+
+1. Qual é a [correlação]{.hl} entre `mao` e `altura`, sem levar em conta o sexo? 
+
+1. Qual é a [correlação]{.hl} entre `mao` e `altura`, levando em conta o sexo? 
+
+# Resolução
+
+## Sinistrismo
+
+1.
+
+```{r le-dados-sinistrismo, echo=FALSE}
+  sinistrismo <- read_csv('Gabriel_Dos_Santos_Ribeiro_sinistrismo.csv')
+```
+
+1.
+```{r conta-elementos-sinistrismo, echo=FALSE}
+  qtdSinistrismo <- sinistrismo %>% nrow()
+```
+
+  a. A amostra tem `r qtdSinistrismo` elementos
+
+```{r calcula-proporção-sinistrismo, echo=FALSE}
+  qtdMasculino <- sinistrismo %>% filter(sexo == 'M') %>% nrow()
+  propHomem <- (100*qtdMasculino)/qtdSinistrismo
+  propMulher <- 100-propHomem
+```
+
+  a. `r propHomem`% da amostra é homem e `r propMulher`% é mulher
+  
+```{r estatisticas-nota, echo=FALSE}
+  library(modeest)
+  notas <- sinistrismo %>% select(nota)
+  media <- as.numeric(unlist(notas)) %>% mean
+  mediana <- as.numeric(unlist(notas)) %>% median
+  options(OutDec = '.')
+  moda <- as.numeric(unlist(notas)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadrao <- as.numeric(unlist(notas)) %>% sd
+  
+  notasHomem <- sinistrismo %>% filter(sexo == 'M') %>% select(nota)
+  mediaHomem <- as.numeric(unlist(notasHomem)) %>% mean
+  medianaHomem <- as.numeric(unlist(notasHomem)) %>% median
+  options(OutDec = '.')
+  modaHomem <- as.numeric(unlist(notasHomem)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoHomem <- as.numeric(unlist(notasHomem)) %>% sd
+  
+  notasMulher <- sinistrismo %>% filter(sexo == 'F') %>% select(nota)
+  mediaMulher <- as.numeric(unlist(notasMulher)) %>% mean
+  medianaMulher <- as.numeric(unlist(notasMulher)) %>% median
+  options(OutDec = '.')
+  modaMulher <- as.numeric(unlist(notasMulher)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoMulher <- as.numeric(unlist(notasMulher)) %>% sd
+```
+
+  a. Média: `r media`<br> Mediana: `r mediana`<br> Moda: `r moda`<br> Desvio padrão: `r desvioPadrao`
+
+  a. Homens:<br>Média: `r mediaHomem`<br> Mediana: `r medianaHomem`<br> Moda: `r modaHomem`<br>Desvio padrão: `r desvioPadraoHomem`<br><br>Mulheres:<br>Média: `r mediaMulher`<br> Mediana: `r medianaMulher`<br> Moda: `r modaMulher`<br> Desvio padrão: `r desvioPadraoMulher`
+
+  a.
+```{r graficos-sinistrismo, echo=FALSE}
+  escala = seq(-1, 1, 0.2)
+  notas %>% ggplot(aes(x = nota)) +
+    geom_histogram(breaks = escala) +
+    labs(
+      x = 'Notas',
+      y = NULL,
+      caption = 'Fonte: Datanaufel'
+    )
+
+  notasHomem %>% ggplot(aes(x = nota)) +
+    geom_histogram(breaks = escala, alpha = 0.7) +
+    labs(
+      x = 'Notas por Homens',
+      y = NULL,
+      caption = 'Fonte: Datanaufel'
+    )
+
+  notasMulher %>% ggplot(aes(x = nota)) +
+    geom_histogram(breaks = escala, alpha = 0.7) +
+    labs(
+      x = 'Notas por Mulheres',
+      y = NULL,
+      caption = 'Fonte: Datanaufel'
+    )
+```
+
+A maior parte das notas esta abaixo de 0.
+Todas as notas de homens estão abaixo de 0.
+A tendencia é que as notas se distanciem de 0.
+
+1. "Pouco mais de 10% da população mundial é canhota"
+
+1.
+```{r ic-notas, echo=FALSE}
+  qtdCanhotos <- notas %>% filter(nota > 0.5) %>% nrow()
+  intervalo <- binom.test(qtdCanhotos, qtdSinistrismo)
+  intervalo$conf.int
+```
+
+1. O valor encontrado na pesquisa esta dentro do intervalo construido. Isto significa que temos uma boa amostra.
+
+1. 
+```{r teste-de-hipotese, echo=FALSE}
+  prop.test(
+    x = mediaHomem+1,
+    n = qtdSinistrismo,
+    p = mediaMulher+1,
+    alternative = 'two.sided',
+    correct = FALSE
+  )
+  mediaHomem+1
+```
+
+Não existem evidencias para rejeitar a hipotese de nulidade, uma vez que mediaHomem+1 esta dentro do intervalo
+
+## Razao
+
+1.
+```{r le-dados-razao, echo=FALSE}
+  razao <- read_csv('Gabriel_Dos_Santos_Ribeiro_razao.csv')
+  
+  #Tamanho minimo de um bebe = 45 centimetros
+  errados <- razao %>% filter(altura < 45)
+  corrigidos <- errados %>% mutate(
+    altura = altura*100,
+    razao = razao*100
+  )
+  
+  corretos <- razao %>% filter(altura > 45)
+  (razao = bind_rows(corrigidos, corretos))
+```
+
+1.
+
+```{r conta-elementos-razao, echo=FALSE}
+  qtdRazao <- razao %>% nrow()
+```
+
+  a. A amostra tem `r qtdRazao` elementos
+
+```{r calcula-proporção-razao, echo=FALSE}
+  qtdMasculino <- razao %>% filter(sexo == 'M') %>% nrow()
+  propHomem <- (100*qtdMasculino)/qtdRazao
+  propMulher <- 100-propHomem
+```
+
+  a. `r propHomem`% da amostra é homem e `r propMulher`% é mulher
+
+```{r estatisticas-altura, echo=FALSE}
+  library(modeest)
+  alturas <- razao %>% select(altura)
+  mediaAlturas <- as.numeric(unlist(alturas)) %>% mean
+  medianaAlturas <- as.numeric(unlist(alturas)) %>% median
+  options(OutDec = '.')
+  modaAlturas <- as.numeric(unlist(alturas)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoAlturas <- as.numeric(unlist(alturas)) %>% sd
+  
+  alturasHomem <- razao %>% filter(sexo == 'M') %>% select(altura)
+  mediaAlturasHomem <- as.numeric(unlist(alturasHomem)) %>% mean
+  medianaAlturasHomem <- as.numeric(unlist(alturasHomem)) %>% median
+  options(OutDec = '.')
+  modaAlturasHomem <- as.numeric(unlist(alturasHomem)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoAlturasHomem <- as.numeric(unlist(alturasHomem)) %>% sd
+  
+  alturasMulher <- razao %>% filter(sexo == 'F') %>% select(altura)
+  mediaAlturasMulher <- as.numeric(unlist(alturasMulher)) %>% mean
+  medianaAlturasMulher <- as.numeric(unlist(alturasMulher)) %>% median
+  options(OutDec = '.')
+  modaAlturasMulher <- as.numeric(unlist(alturasMulher)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoAlturasMulher <- as.numeric(unlist(alturasMulher)) %>% sd
+```
+
+```{r estatisticas-mao, echo=FALSE}
+  library(modeest)
+  maos <- razao %>% select(mao)
+  mediaMaos <- as.numeric(unlist(maos)) %>% mean
+  medianaMaos <- as.numeric(unlist(maos)) %>% median
+  options(OutDec = '.')
+  modaMaos <- as.numeric(unlist(maos)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoMaos <- as.numeric(unlist(maos)) %>% sd
+  
+  maosHomem <- razao %>% filter(sexo == 'M') %>% select(mao)
+  mediaMaosHomem <- as.numeric(unlist(maosHomem)) %>% mean
+  medianaMaosHomem <- as.numeric(unlist(maosHomem)) %>% median
+  options(OutDec = '.')
+  modaMaosHomem <- as.numeric(unlist(maosHomem)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoMaosHomem <- as.numeric(unlist(maosHomem)) %>% sd
+  
+  maosMulher <- razao %>% filter(sexo == 'F') %>% select(mao)
+  mediaMaosMulher <- as.numeric(unlist(maosMulher)) %>% mean
+  medianaMaosMulher <- as.numeric(unlist(maosMulher)) %>% median
+  options(OutDec = '.')
+  modaMaosMulher <- as.numeric(unlist(maosMulher)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoMaosMulher <- as.numeric(unlist(maosMulher)) %>% sd
+```
+
+```{r estatisticas-razao, echo=FALSE}
+  library(modeest)
+  razoes <- razao %>% select(razao)
+  mediaRazoes <- as.numeric(unlist(razoes)) %>% mean
+  medianaRazoes <- as.numeric(unlist(razoes)) %>% median
+  options(OutDec = '.')
+  modaRazoes <- as.numeric(unlist(razoes)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoRazoes <- as.numeric(unlist(razoes)) %>% sd
+  
+  razoesHomem <- razao %>% filter(sexo == 'M') %>% select(razao)
+  mediaRazoesHomem <- as.numeric(unlist(razoesHomem)) %>% mean
+  medianaRazoesHomem <- as.numeric(unlist(razoesHomem)) %>% median
+  options(OutDec = '.')
+  modaRazoesHomem <- as.numeric(unlist(razoesHomem)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoRazoesHomem <- as.numeric(unlist(razoesHomem)) %>% sd
+  
+  razoesMulher <- razao %>% filter(sexo == 'F') %>% select(razao)
+  mediaRazoesMulher <- as.numeric(unlist(razoesMulher)) %>% mean
+  medianaRazoesMulher <- as.numeric(unlist(razoesMulher)) %>% median
+  options(OutDec = '.')
+  modaRazoesMulher <- as.numeric(unlist(razoesMulher)) %>% mlv(method = 'venter')
+  options(OutDec = ',')
+  desvioPadraoRazoesMulher <- as.numeric(unlist(razoesMulher)) %>% sd
+```
+
+  a.
+    |  |Altura   |Mao    |Razao    |
+    |--|---------|-------|---------|
+    |Médias    |`r mediaAlturas`   |`r mediaMaos`          |`r mediaRazoes`          |
+    |Mediana   |`r medianaAlturas`   |`r medianaMaos`        |`r medianaRazoes`        |
+    |Moda    |`r modaAlturas`    |`r modaMaos`           |`r modaRazoes`           |
+    |Desvio padrão   |`r desvioPadraoAlturas`    |`r desvioPadraoMaos`   |`r desvioPadraoRazoes`   |
+  a.
+    |Homens:  |Altura   |Mao    |Razao    |
+    |--|---------|-------|---------|
+    |Médias    |`r mediaAlturasHomem`   |`r mediaMaosHomem`          |`r mediaRazoesHomem`          |
+    |Mediana   |`r medianaAlturasHomem`   |`r medianaMaosHomem`        |`r medianaRazoesHomem`        |
+    |Moda    |`r modaAlturasHomem`    |`r modaMaosHomem`           |`r modaRazoesHomem`           |
+    |Desvio padrão   |`r desvioPadraoAlturasHomem`    |`r desvioPadraoMaosHomem`   |`r desvioPadraoRazoesHomem`   |
+
+    |Mulheres:  |Altura   |Mao    |Razao    |
+    |--|---------|-------|---------|
+    |Médias    |`r mediaAlturasMulher`   |`r mediaMaosMulher`          |`r mediaRazoesMulher`          |
+    |Mediana   |`r medianaAlturasMulher`   |`r medianaMaosMulher`        |`r medianaRazoesMulher`        |
+    |Moda    |`r modaAlturasMulher`    |`r modaMaosMulher`           |`r modaRazoesMulher`           |
+    |Desvio padrão   |`r desvioPadraoAlturasMulher`    |`r desvioPadraoMaosMulher`   |`r desvioPadraoRazoesMulher`   |
+  
+  a.
+```{r graficos-razao, echo=FALSE}
+  razao %>% ggplot(aes(x = altura, y = mao)) +
+    geom_point() +
+    geom_smooth(aes(group = 1), method = 'lm', se = FALSE) +
+    labs(
+      title = 'Razao de altura e tamanho da mao',
+      x = 'tamanho da mao',
+      y = 'altura',
+    )
+  razao %>% filter(sexo == 'M') %>% ggplot(aes(x = altura, y = mao)) +
+    geom_point() +
+    geom_smooth(aes(group = 1), method = 'lm', se = FALSE) +
+    labs(
+      title = 'Razao de altura e tamanho da mao de Homens',
+      x = 'tamanho da mao',
+      y = 'altura',
+    )
+  razao %>% filter(sexo == 'F') %>% ggplot(aes(x = altura, y = mao)) +
+    geom_point() +
+    geom_smooth(aes(group = 1), method = 'lm', se = FALSE) +
+    labs(
+      title = 'Razao de altura e tamanho da mao de Mulheres',
+      x = 'tamanho da mao',
+      y = 'altura',
+    )
+```
+
+Pela reta de regressão, podemos relacionar o tamanho da mao e a altura, quanto maior sendo a altura, maior será a mão
+
+1.
+```{r teste-razao, echo=FALSE}
+  t.test(
+    razoesHomem,
+    alternative = "greater",
+    mu = mediaRazoesMulher
+  )
+```
+
+Não Existem evidencias para rejeitar a hipotese de nulidade, uma vez que o valor de p é maior que 0,5
+
+1.
+
+```{r ic-razao, echo=FALSE}
+  t.test(
+    razoesHomem,
+    alternative = "two.sided",
+    mu = mediaRazoesMulher
+  )
+```
+
+1.
+Correlação entre altura e mão: `r cor(alturas, maos)`
+
+1.
+Correlação entre altura e mão de homens: `r cor(alturasHomem, maosHomem)`<br>
+Correlação entre altura e mão de mulheres: `r cor(alturasMulher, maosMulher)`
+<div style='height: 200px'></div>
